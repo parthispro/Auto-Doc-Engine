@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auto-doc-engine"
+version = "0.1.0"
+description = "CLI tool to synthesize portfolio-grade CTF writeups from raw telemetry"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Auto-Doc Engine" }]
+
+dependencies = [
+    "google-generativeai>=0.8.0",
+    "huggingface-hub>=0.24.0",
+    "requests>=2.32.0",
+    "rich>=13.7.0",
+    "click>=8.1.7",
+    "jinja2>=3.1.4",
+    "python-dotenv>=1.0.1",
+    "markdown>=3.6",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "black>=24.0", "ruff>=0.4.0"]
+
+[project.scripts]
+autodoc = "autodoc.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
