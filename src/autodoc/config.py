@@ -6,9 +6,10 @@ Reads from .env, environment variables, or ~/.autodoc/config.toml (in priority o
 from __future__ import annotations
 
 import os
-import tomllib
-from pathlib import Path
 from dataclasses import dataclass, field
+from pathlib import Path
+
+import tomllib
 from dotenv import load_dotenv
 
 # Load .env from CWD or project root

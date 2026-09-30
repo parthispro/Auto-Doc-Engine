@@ -2,7 +2,6 @@
 tests/test_noise.py — Unit tests for the noise filtration layer.
 """
 
-import pytest
 from autodoc.filters.noise import filter_noise, segment_by_tool
 
 

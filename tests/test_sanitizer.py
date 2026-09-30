@@ -2,7 +2,6 @@
 tests/test_sanitizer.py — Unit tests for the sanitization layer.
 """
 
-import pytest
 from autodoc.filters.sanitizer import sanitize
 
 

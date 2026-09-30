@@ -8,7 +8,6 @@ and failed ping loops from raw terminal telemetry before AI synthesis.
 from __future__ import annotations
 
 import re
-from typing import Sequence
 
 # ── Patterns to DROP entirely ─────────────────────────────────────────────────
 

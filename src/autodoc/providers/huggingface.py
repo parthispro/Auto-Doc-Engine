@@ -11,7 +11,9 @@ Model default: mistralai/Mistral-7B-Instruct-v0.3
 from __future__ import annotations
 
 import json
+
 import requests
+
 from autodoc.providers.base import BaseProvider, ProviderError
 
 _HF_API_BASE = "https://api-inference.huggingface.co/models"
@@ -73,7 +75,7 @@ class HuggingFaceProvider(BaseProvider):
             try:
                 data = resp.json()
                 wait = data.get("estimated_time", 20)
-            except Exception:
+            except (json.JSONDecodeError, ValueError):
                 wait = 20
             raise ProviderError(
                 f"HuggingFace model is loading. Retry in ~{wait}s. "
@@ -103,5 +105,9 @@ class HuggingFaceProvider(BaseProvider):
                 timeout=10,
             )
             return resp.status_code in (200, 503)  # 503 = loading, still reachable
-        except Exception:
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout,
+            OSError,
+        ):
             return False

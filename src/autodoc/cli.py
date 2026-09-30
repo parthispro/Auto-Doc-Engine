@@ -26,14 +26,14 @@ import sys
 from pathlib import Path
 
 import click
+from rich import box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-from rich import box
 
 from autodoc.config import config
 from autodoc.engine import Engine
-from autodoc.providers import get_provider, ProviderError
+from autodoc.providers import ProviderError, get_provider
 from autodoc.providers.ollama import OllamaProvider
 
 console = Console()
@@ -80,7 +80,6 @@ def main():
 
     Synthesize clinical, portfolio-grade CTF writeups from raw terminal telemetry.
     """
-    pass
 
 
 # ── run command ───────────────────────────────────────────────────────────────

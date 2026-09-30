@@ -67,10 +67,10 @@ def get_provider(cfg: Config) -> BaseProvider:
 
 
 __all__ = [
-    "get_provider",
     "BaseProvider",
-    "ProviderError",
     "GeminiProvider",
     "HuggingFaceProvider",
     "OllamaProvider",
+    "ProviderError",
+    "get_provider",
 ]

@@ -8,12 +8,8 @@ Falls back gracefully on quota exhaustion (429) or network errors.
 from __future__ import annotations
 
 import time
-from typing import TYPE_CHECKING
 
 from autodoc.providers.base import BaseProvider, ProviderError
-
-if TYPE_CHECKING:
-    pass
 
 
 class GeminiProvider(BaseProvider):
@@ -64,5 +60,5 @@ class GeminiProvider(BaseProvider):
             model = self._genai.GenerativeModel(model_name=self._model_name)
             model.generate_content("ping")
             return True
-        except Exception:
+        except (OSError, ValueError, RuntimeError):
             return False

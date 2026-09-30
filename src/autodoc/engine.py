@@ -13,20 +13,19 @@ Pipeline:
 from __future__ import annotations
 
 import re
-import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
-from rich.syntax import Syntax
 
-from autodoc.config import Config, config as _default_config
+from autodoc.config import Config
+from autodoc.config import config as _default_config
 from autodoc.filters.noise import filter_noise, segment_by_tool
 from autodoc.filters.sanitizer import sanitize
 from autodoc.prompt_builder import build_prompt
-from autodoc.providers import get_provider, ProviderError
+from autodoc.providers import ProviderError, get_provider
 from autodoc.renderers.markdown import render
 
 console = Console(stderr=True)
@@ -219,7 +218,6 @@ class Engine:
         Fallback order: Gemini → HuggingFace → Ollama
         """
         from autodoc.providers import (
-            GeminiProvider,
             HuggingFaceProvider,
             OllamaProvider,
         )

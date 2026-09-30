@@ -11,10 +11,10 @@ from __future__ import annotations
 
 import shutil
 import subprocess
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from datetime import datetime
 
-from jinja2 import Environment, BaseLoader
+from jinja2 import BaseLoader, Environment
 
 # ── HTML Template ─────────────────────────────────────────────────────────────
 
@@ -163,7 +163,8 @@ def render(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     written: dict[str, Path] = {}
-    generated_at = datetime.now().strftime("%Y-%m-%d %H:%M UTC+05:30")
+    _IST = timezone(timedelta(hours=5, minutes=30))
+    generated_at = datetime.now(tz=_IST).strftime("%Y-%m-%d %H:%M IST")
 
     # ── Markdown ──────────────────────────────────────────────────────────────
     md_path = output_dir / f"{slug}.md"
@@ -173,7 +174,7 @@ def render(
     # ── HTML ──────────────────────────────────────────────────────────────────
     if "html" in formats or "pdf" in formats:
         body_html = _markdown_to_html_body(content)
-        env = Environment(loader=BaseLoader())
+        env = Environment(loader=BaseLoader(), autoescape=False)  # noqa: S701
         template = env.from_string(_HTML_TEMPLATE)
         html_content = template.render(
             title=title,
@@ -206,7 +207,9 @@ def render(
                 "linkcolor=blue",
                 "--toc",
             ]
-            result = subprocess.run(cmd, capture_output=True, text=True)
+            result = subprocess.run(  # noqa: S603
+                cmd, capture_output=True, text=True, check=False
+            )
             if result.returncode == 0:
                 written["pdf"] = pdf_path
             else:
@@ -214,9 +217,10 @@ def render(
                 wkhtml = shutil.which("wkhtmltopdf")
                 if wkhtml and "html" in written:
                     pdf_path = output_dir / f"{slug}.pdf"
-                    subprocess.run(
+                    subprocess.run(  # noqa: S603
                         [wkhtml, "--quiet", str(written["html"]), str(pdf_path)],
                         capture_output=True,
+                        check=False,
                     )
                     if pdf_path.exists():
                         written["pdf"] = pdf_path

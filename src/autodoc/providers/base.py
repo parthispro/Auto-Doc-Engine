@@ -39,7 +39,7 @@ class BaseProvider(ABC):
         try:
             self.generate("ping", "pong", temperature=0.0)
             return True
-        except Exception:
+        except ProviderError:
             return False
 
 

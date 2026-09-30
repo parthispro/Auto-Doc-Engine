@@ -11,7 +11,9 @@ Requires: `ollama` running and the target model pulled.
 from __future__ import annotations
 
 import json
+
 import requests
+
 from autodoc.providers.base import BaseProvider, ProviderError
 
 _TIMEOUT = 300  # local inference can be slow
@@ -65,7 +67,11 @@ class OllamaProvider(BaseProvider):
         try:
             resp = requests.get(f"{self._host}/api/tags", timeout=5)
             return resp.ok
-        except Exception:
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout,
+            OSError,
+        ):
             return False
 
     def list_models(self) -> list[str]:
@@ -74,6 +80,10 @@ class OllamaProvider(BaseProvider):
             resp = requests.get(f"{self._host}/api/tags", timeout=5)
             if resp.ok:
                 return [m["name"] for m in resp.json().get("models", [])]
-        except Exception:
-            pass
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout,
+            OSError,
+        ):
+            return []
         return []

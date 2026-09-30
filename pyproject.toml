@@ -34,3 +34,9 @@ where = ["src"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "BLE", "S", "PLW", "DTZ"]
+ignore = [
+    "S101",   # assert usage — fine in tests
+]
