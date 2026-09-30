@@ -43,6 +43,7 @@ def _slugify(text: str) -> str:
 @dataclass
 class EngineResult:
     """Result object returned by Engine.run()."""
+
     writeup_md: str
     written_files: dict[str, Path]
     replacements_count: int
@@ -137,9 +138,7 @@ class Engine:
             san_result = sanitize(filtered, redact_flags=redact_flags)
             n_replacements = len(san_result.replacements)
             if verbose and n_replacements:
-                console.print(
-                    f"  [dim]Sanitized {n_replacements} identifier(s)[/dim]"
-                )
+                console.print(f"  [dim]Sanitized {n_replacements} identifier(s)[/dim]")
             progress.remove_task(task)
 
             # ── Step 3: Build Prompt ─────────────────────────────────────────
@@ -219,7 +218,11 @@ class Engine:
 
         Fallback order: Gemini → HuggingFace → Ollama
         """
-        from autodoc.providers import GeminiProvider, HuggingFaceProvider, OllamaProvider
+        from autodoc.providers import (
+            GeminiProvider,
+            HuggingFaceProvider,
+            OllamaProvider,
+        )
 
         fallback_chain = []
         if not isinstance(provider, HuggingFaceProvider) and cfg.hf_api_key:
@@ -231,7 +234,9 @@ class Engine:
                 )
             )
         if not isinstance(provider, OllamaProvider):
-            fallback_chain.append(OllamaProvider(host=cfg.ollama_host, model=cfg.ollama_model))
+            fallback_chain.append(
+                OllamaProvider(host=cfg.ollama_host, model=cfg.ollama_model)
+            )
 
         # Try primary
         try:

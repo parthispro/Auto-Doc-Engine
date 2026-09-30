@@ -121,6 +121,7 @@ def _markdown_to_html_body(md: str) -> str:
     """Convert Markdown to HTML body using the `markdown` library."""
     try:
         import markdown as md_lib
+
         return md_lib.markdown(
             md,
             extensions=["fenced_code", "tables", "codehilite", "toc"],
@@ -193,12 +194,16 @@ def render(
             cmd = [
                 pandoc,
                 str(md_path),
-                "-o", str(pdf_path),
+                "-o",
+                str(pdf_path),
                 "--pdf-engine=xelatex",
                 "--highlight-style=breezedark",
-                "-V", "geometry:margin=1in",
-                "-V", "colorlinks=true",
-                "-V", "linkcolor=blue",
+                "-V",
+                "geometry:margin=1in",
+                "-V",
+                "colorlinks=true",
+                "-V",
+                "linkcolor=blue",
                 "--toc",
             ]
             result = subprocess.run(cmd, capture_output=True, text=True)

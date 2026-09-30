@@ -42,10 +42,14 @@ err_console = Console(stderr=True)
 
 # ── Shared Options ─────────────────────────────────────────────────────────────
 
+
 def _provider_option():
     return click.option(
-        "--provider", "-p",
-        type=click.Choice(["gemini", "huggingface", "ollama", "auto"], case_sensitive=False),
+        "--provider",
+        "-p",
+        type=click.Choice(
+            ["gemini", "huggingface", "ollama", "auto"], case_sensitive=False
+        ),
         default=None,
         help="AI provider to use. Defaults to AUTODOC_PROVIDER env var or 'auto'.",
     )
@@ -53,7 +57,8 @@ def _provider_option():
 
 def _api_key_option():
     return click.option(
-        "--api-key", "-k",
+        "--api-key",
+        "-k",
         default=None,
         metavar="KEY",
         help="Override API key for the selected provider.",
@@ -61,6 +66,7 @@ def _api_key_option():
 
 
 # ── CLI Group ─────────────────────────────────────────────────────────────────
+
 
 @click.group()
 @click.version_option(package_name="auto-doc-engine")
@@ -79,47 +85,110 @@ def main():
 
 # ── run command ───────────────────────────────────────────────────────────────
 
+
 @main.command()
-@click.option("--file", "-f", "input_file",
-              type=click.Path(exists=True, readable=True, path_type=Path),
-              help="Path to raw telemetry log file.")
-@click.option("--stdin", "from_stdin", is_flag=True,
-              help="Read raw telemetry from stdin (pipe mode).")
-@click.option("--name", "-n", "challenge_name", default="Unknown Challenge",
-              show_default=True, help="Challenge name or identifier.")
-@click.option("--domain", "-d",
-              type=click.Choice(["pwn", "web", "crypto", "osint", "rev", "misc", "general"],
-                                case_sensitive=False),
-              default="general", show_default=True, help="Security domain.")
-@click.option("--difficulty", "-l",
-              type=click.Choice(["easy", "medium", "hard", "insane", "unknown"],
-                                case_sensitive=False),
-              default="unknown", show_default=True, help="Challenge difficulty.")
-@click.option("--output", "-o", "output_dir",
-              type=click.Path(path_type=Path),
-              default=None, help="Output directory. Defaults to ./reports.")
-@click.option("--format", "formats", multiple=True,
-              type=click.Choice(["md", "html", "pdf"], case_sensitive=False),
-              default=["md", "html", "pdf"], show_default=True,
-              help="Output format(s). Can be specified multiple times.")
+@click.option(
+    "--file",
+    "-f",
+    "input_file",
+    type=click.Path(exists=True, readable=True, path_type=Path),
+    help="Path to raw telemetry log file.",
+)
+@click.option(
+    "--stdin",
+    "from_stdin",
+    is_flag=True,
+    help="Read raw telemetry from stdin (pipe mode).",
+)
+@click.option(
+    "--name",
+    "-n",
+    "challenge_name",
+    default="Unknown Challenge",
+    show_default=True,
+    help="Challenge name or identifier.",
+)
+@click.option(
+    "--domain",
+    "-d",
+    type=click.Choice(
+        ["pwn", "web", "crypto", "osint", "rev", "misc", "general"],
+        case_sensitive=False,
+    ),
+    default="general",
+    show_default=True,
+    help="Security domain.",
+)
+@click.option(
+    "--difficulty",
+    "-l",
+    type=click.Choice(
+        ["easy", "medium", "hard", "insane", "unknown"], case_sensitive=False
+    ),
+    default="unknown",
+    show_default=True,
+    help="Challenge difficulty.",
+)
+@click.option(
+    "--output",
+    "-o",
+    "output_dir",
+    type=click.Path(path_type=Path),
+    default=None,
+    help="Output directory. Defaults to ./reports.",
+)
+@click.option(
+    "--format",
+    "formats",
+    multiple=True,
+    type=click.Choice(["md", "html", "pdf"], case_sensitive=False),
+    default=["md", "html", "pdf"],
+    show_default=True,
+    help="Output format(s). Can be specified multiple times.",
+)
 @_provider_option()
 @_api_key_option()
-@click.option("--redact-flags", is_flag=True, default=False,
-              help="Also redact captured flag values in the output.")
-@click.option("--verbose", "-v", is_flag=True, default=False,
-              help="Print detailed pipeline steps.")
-@click.option("--preview", is_flag=True, default=False,
-              help="Print the generated Markdown to stdout after synthesis.")
+@click.option(
+    "--redact-flags",
+    is_flag=True,
+    default=False,
+    help="Also redact captured flag values in the output.",
+)
+@click.option(
+    "--verbose",
+    "-v",
+    is_flag=True,
+    default=False,
+    help="Print detailed pipeline steps.",
+)
+@click.option(
+    "--preview",
+    is_flag=True,
+    default=False,
+    help="Print the generated Markdown to stdout after synthesis.",
+)
 def run(
-    input_file, from_stdin, challenge_name, domain, difficulty,
-    output_dir, formats, provider, api_key, redact_flags, verbose, preview,
+    input_file,
+    from_stdin,
+    challenge_name,
+    domain,
+    difficulty,
+    output_dir,
+    formats,
+    provider,
+    api_key,
+    redact_flags,
+    verbose,
+    preview,
 ):
     """Synthesize a writeup from a telemetry log file or stdin."""
 
     # ── Read input ─────────────────────────────────────────────────────────
     if from_stdin:
         if sys.stdin.isatty():
-            err_console.print("[red]Error:[/red] --stdin specified but no data on stdin.")
+            err_console.print(
+                "[red]Error:[/red] --stdin specified but no data on stdin."
+            )
             raise SystemExit(1)
         telemetry = sys.stdin.read()
     elif input_file:
@@ -202,6 +271,7 @@ def run(
 
 # ── health command ────────────────────────────────────────────────────────────
 
+
 @main.command()
 @_provider_option()
 @_api_key_option()
@@ -229,18 +299,26 @@ def health(provider, api_key):
             OllamaProvider(host=cfg.ollama_host, model=cfg.ollama_model)
         )
 
-    table = Table(box=box.ROUNDED, title="Provider Health Check", title_style="bold blue")
+    table = Table(
+        box=box.ROUNDED, title="Provider Health Check", title_style="bold blue"
+    )
     table.add_column("Provider", style="bold cyan")
     table.add_column("Status", justify="center")
     table.add_column("Details")
 
     for p in providers_to_check:
         ok = p.health_check()
-        status = "[bold green]✓ ONLINE[/bold green]" if ok else "[bold red]✗ OFFLINE[/bold red]"
+        status = (
+            "[bold green]✓ ONLINE[/bold green]"
+            if ok
+            else "[bold red]✗ OFFLINE[/bold red]"
+        )
         details = ""
         if isinstance(p, OllamaProvider):
             models = p.list_models()
-            details = f"{len(models)} model(s) available" if ok else "daemon not running"
+            details = (
+                f"{len(models)} model(s) available" if ok else "daemon not running"
+            )
         elif isinstance(p, GeminiProvider):
             details = p._model_name
         elif isinstance(p, HuggingFaceProvider):
@@ -252,8 +330,11 @@ def health(provider, api_key):
 
 # ── models command ────────────────────────────────────────────────────────────
 
+
 @main.command()
-@click.option("--host", default=None, help="Ollama host URL. Defaults to OLLAMA_HOST env.")
+@click.option(
+    "--host", default=None, help="Ollama host URL. Defaults to OLLAMA_HOST env."
+)
 def models(host):
     """List locally available Ollama models."""
     host = host or config.ollama_host
@@ -277,6 +358,7 @@ def models(host):
 
 # ── config command ────────────────────────────────────────────────────────────
 
+
 @main.command("config")
 def show_config():
     """Show current resolved configuration (redacts secret keys)."""
@@ -287,7 +369,9 @@ def show_config():
             return "[dim]not set[/dim]"
         return val[:6] + "…" + val[-4:] if len(val) > 12 else "***"
 
-    table = Table(box=box.ROUNDED, title="Current Configuration", title_style="bold blue")
+    table = Table(
+        box=box.ROUNDED, title="Current Configuration", title_style="bold blue"
+    )
     table.add_column("Key", style="bold")
     table.add_column("Value", style="cyan")
 

@@ -20,12 +20,16 @@ _TIMEOUT = 300  # local inference can be slow
 class OllamaProvider(BaseProvider):
     name = "ollama"
 
-    def __init__(self, host: str = "http://localhost:11434", model: str = "llama3") -> None:
+    def __init__(
+        self, host: str = "http://localhost:11434", model: str = "llama3"
+    ) -> None:
         self._host = host.rstrip("/")
         self._model = model
         self._chat_url = f"{self._host}/api/chat"
 
-    def generate(self, system_prompt: str, user_prompt: str, temperature: float = 0.2) -> str:
+    def generate(
+        self, system_prompt: str, user_prompt: str, temperature: float = 0.2
+    ) -> str:
         payload = {
             "model": self._model,
             "messages": [
@@ -44,7 +48,9 @@ class OllamaProvider(BaseProvider):
                 "Is 'ollama serve' running?"
             ) from exc
         except requests.exceptions.Timeout:
-            raise ProviderError("Ollama request timed out (>5 min). Try a smaller model.")
+            raise ProviderError(
+                "Ollama request timed out (>5 min). Try a smaller model."
+            )
 
         if not resp.ok:
             raise ProviderError(f"Ollama error {resp.status_code}: {resp.text[:400]}")

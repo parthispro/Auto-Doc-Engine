@@ -42,27 +42,27 @@ def _get(key: str, section: str = "autodoc", default: str | None = None) -> str 
 @dataclass
 class Config:
     # ── AI Provider ─────────────────────────────────────────────────────────
-    provider: str = field(default_factory=lambda: _get("AUTODOC_PROVIDER", default="gemini"))
+    provider: str = field(
+        default_factory=lambda: _get("AUTODOC_PROVIDER", default="gemini")
+    )
 
     # Gemini
-    gemini_api_key: str | None = field(
-        default_factory=lambda: _get("GEMINI_API_KEY")
-    )
+    gemini_api_key: str | None = field(default_factory=lambda: _get("GEMINI_API_KEY"))
     gemini_model: str = field(
         default_factory=lambda: _get("GEMINI_MODEL", default="gemini-2.5-pro")
     )
 
     # Hugging Face
-    hf_api_key: str | None = field(
-        default_factory=lambda: _get("HF_API_KEY")
-    )
+    hf_api_key: str | None = field(default_factory=lambda: _get("HF_API_KEY"))
     hf_model: str = field(
         default_factory=lambda: _get(
             "HF_MODEL", default="mistralai/Mistral-7B-Instruct-v0.3"
         )
     )
     hf_endpoint: str | None = field(
-        default_factory=lambda: _get("HF_ENDPOINT")  # optional custom inference endpoint
+        default_factory=lambda: _get(
+            "HF_ENDPOINT"
+        )  # optional custom inference endpoint
     )
 
     # Ollama (local)
@@ -77,13 +77,12 @@ class Config:
     output_dir: Path = field(
         default_factory=lambda: Path(_get("AUTODOC_OUTPUT_DIR", default="./reports"))
     )
-    output_formats: list[str] = field(
-        default_factory=lambda: ["md", "html", "pdf"]
-    )
+    output_formats: list[str] = field(default_factory=lambda: ["md", "html", "pdf"])
 
     # ── Sanitization ─────────────────────────────────────────────────────────
     sanitize: bool = field(
-        default_factory=lambda: _get("AUTODOC_SANITIZE", default="true").lower() == "true"
+        default_factory=lambda: _get("AUTODOC_SANITIZE", default="true").lower()
+        == "true"
     )
 
     # ── Misc ─────────────────────────────────────────────────────────────────

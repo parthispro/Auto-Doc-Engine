@@ -14,7 +14,10 @@ class TestNoiseFilter:
 
     def test_collapses_repeated_ping(self):
         lines = "\n".join(
-            [f"64 bytes from 1.1.1.1: icmp_seq={i} ttl=64 time=10.1 ms" for i in range(10)]
+            [
+                f"64 bytes from 1.1.1.1: icmp_seq={i} ttl=64 time=10.1 ms"
+                for i in range(10)
+            ]
         )
         result = filter_noise(lines)
         assert result.count("icmp_seq") == 0  # all ping lines stripped

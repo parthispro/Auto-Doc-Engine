@@ -36,7 +36,9 @@ _ENUM_NOISE = re.compile(
 )
 
 # Blank ping/nc connection refused lines
-_CONN_REFUSED = re.compile(r"^.*(Connection refused|Network unreachable|No route to host).*$", re.MULTILINE)
+_CONN_REFUSED = re.compile(
+    r"^.*(Connection refused|Network unreachable|No route to host).*$", re.MULTILINE
+)
 
 # Raw ^C / ^D / terminal control
 _CTRL = re.compile(r"\^[CD]")
@@ -113,8 +115,10 @@ def filter_noise(
 
     # 7. Handle failed connection lines
     if preserve_failures:
+
         def _mark_pivot(m: re.Match) -> str:
             return f"[PIVOT — FAILED] {m.group(0)}"
+
         text = _CONN_REFUSED.sub(_mark_pivot, text)
     else:
         text = _CONN_REFUSED.sub("", text)
@@ -136,15 +140,15 @@ def segment_by_tool(raw: str) -> dict[str, list[str]]:
     This helps the AI provider understand context switches.
     """
     tool_patterns: list[tuple[str, re.Pattern]] = [
-        ("nmap",       re.compile(r"nmap\s", re.IGNORECASE)),
-        ("gdb/gef",    re.compile(r"(gdb|gef|pwndbg)\s*>", re.IGNORECASE)),
-        ("burpsuite",  re.compile(r"(Burp Suite|burp proxy)", re.IGNORECASE)),
-        ("sqlmap",     re.compile(r"sqlmap\s", re.IGNORECASE)),
-        ("gobuster",   re.compile(r"gobuster\s", re.IGNORECASE)),
-        ("curl",       re.compile(r"curl\s", re.IGNORECASE)),
-        ("python",     re.compile(r"python3?\s", re.IGNORECASE)),
-        ("ffuf",       re.compile(r"ffuf\s", re.IGNORECASE)),
-        ("john",       re.compile(r"john\s|hashcat\s", re.IGNORECASE)),
+        ("nmap", re.compile(r"nmap\s", re.IGNORECASE)),
+        ("gdb/gef", re.compile(r"(gdb|gef|pwndbg)\s*>", re.IGNORECASE)),
+        ("burpsuite", re.compile(r"(Burp Suite|burp proxy)", re.IGNORECASE)),
+        ("sqlmap", re.compile(r"sqlmap\s", re.IGNORECASE)),
+        ("gobuster", re.compile(r"gobuster\s", re.IGNORECASE)),
+        ("curl", re.compile(r"curl\s", re.IGNORECASE)),
+        ("python", re.compile(r"python3?\s", re.IGNORECASE)),
+        ("ffuf", re.compile(r"ffuf\s", re.IGNORECASE)),
+        ("john", re.compile(r"john\s|hashcat\s", re.IGNORECASE)),
     ]
 
     segments: dict[str, list[str]] = {"_other": []}

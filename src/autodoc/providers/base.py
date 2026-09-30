@@ -13,7 +13,9 @@ class BaseProvider(ABC):
     name: str = "base"
 
     @abstractmethod
-    def generate(self, system_prompt: str, user_prompt: str, temperature: float = 0.2) -> str:
+    def generate(
+        self, system_prompt: str, user_prompt: str, temperature: float = 0.2
+    ) -> str:
         """
         Call the underlying model and return the generated Markdown writeup.
 

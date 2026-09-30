@@ -31,7 +31,9 @@ class GeminiProvider(BaseProvider):
         self._genai = genai
         self._model_name = model
 
-    def generate(self, system_prompt: str, user_prompt: str, temperature: float = 0.2) -> str:
+    def generate(
+        self, system_prompt: str, user_prompt: str, temperature: float = 0.2
+    ) -> str:
         model = self._genai.GenerativeModel(
             model_name=self._model_name,
             system_instruction=system_prompt,

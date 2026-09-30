@@ -51,7 +51,9 @@ class HuggingFaceProvider(BaseProvider):
             "stream": False,
         }
 
-    def generate(self, system_prompt: str, user_prompt: str, temperature: float = 0.2) -> str:
+    def generate(
+        self, system_prompt: str, user_prompt: str, temperature: float = 0.2
+    ) -> str:
         payload = self._build_chat_payload(system_prompt, user_prompt, temperature)
 
         try:

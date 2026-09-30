@@ -26,9 +26,7 @@ _HASH = re.compile(
 )
 
 # URLs (preserve path structure but redact host)
-_URL_HOST = re.compile(
-    r"(https?://)([\w\-\.]+)((?:/[^\s]*)?)"
-)
+_URL_HOST = re.compile(r"(https?://)([\w\-\.]+)((?:/[^\s]*)?)")
 
 # Private/RFC1918 ranges to explicitly redact
 _PRIVATE_RANGES = re.compile(
@@ -36,9 +34,7 @@ _PRIVATE_RANGES = re.compile(
 )
 
 # Common flag formats: CTF{...} / FLAG{...} / HTB{...} etc.
-_FLAG = re.compile(
-    r"\b([A-Za-z0-9_]{1,10})\{([^}]{4,})\}", re.IGNORECASE
-)
+_FLAG = re.compile(r"\b([A-Za-z0-9_]{1,10})\{([^}]{4,})\}", re.IGNORECASE)
 
 
 @dataclass
@@ -111,6 +107,7 @@ def sanitize(raw: str, redact_flags: bool = False) -> SanitizationResult:
 
     # 6. Flags (optional)
     if redact_flags:
+
         def _replace_flag(m: re.Match) -> str:
             placeholder = f"{m.group(1)}{{[REDACTED_FLAG]}}"
             result.log(m.group(0), placeholder)
