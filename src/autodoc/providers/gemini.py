@@ -17,7 +17,16 @@ class GeminiProvider(BaseProvider):
 
     def __init__(self, api_key: str, model: str = "gemini-3.5-flash-lite") -> None:
         self.api_key = api_key.strip()
-        self._model_name = model
+        # Automatically alias retired models to supported versions
+        retired_map = {
+            "gemini-2.0-flash": "gemini-3.5-flash-lite",
+            "gemini-2.0-flash-exp": "gemini-3.5-flash-lite",
+            "gemini-2.5-pro": "gemini-3.5-flash-lite",
+            "gemini-2.5-flash": "gemini-3.5-flash-lite",
+            "gemini-1.5-flash": "gemini-3.5-flash-lite",
+            "gemini-1.5-pro": "gemini-3.5-flash-lite",
+        }
+        self._model_name = retired_map.get(model, model)
 
         # Prefer new google-genai SDK, fallback to legacy google-generativeai
         try:
@@ -25,6 +34,9 @@ class GeminiProvider(BaseProvider):
 
             logging.getLogger("google.genai").setLevel(logging.ERROR)
             from google import genai
+            from google.genai.models import Models
+
+            Models._logged_afc_warning = True
 
             self._client = genai.Client(api_key=self.api_key)
             self._use_new_sdk = True
