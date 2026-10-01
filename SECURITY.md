@@ -16,7 +16,7 @@ Please include:
 - Potential impact
 - Suggested fix (if any)
 
-We aim to acknowledge reports within **48 hours** and release a patch within **7 days**
+I aim to acknowledge reports within **50 hours** and release a patch within **~~7-10 days**
 for confirmed critical issues.
 
 ## Scope
