@@ -7,7 +7,7 @@
 If you discover a security issue (e.g., a sanitization bypass that leaks real IPs
 or API keys into generated output), please report it privately:
 
-1. Email the maintainer directly (add contact in your fork's README)
+1. Email the maintainer directly - pgx2201@proton.me
 2. Or use GitHub's **"Report a vulnerability"** button in the Security tab
 
 Please include:
