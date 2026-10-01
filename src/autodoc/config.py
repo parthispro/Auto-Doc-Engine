@@ -50,7 +50,7 @@ class Config:
     # Gemini
     gemini_api_key: str | None = field(default_factory=lambda: _get("GEMINI_API_KEY"))
     gemini_model: str = field(
-        default_factory=lambda: _get("GEMINI_MODEL", default="gemini-2.5-pro")
+        default_factory=lambda: _get("GEMINI_MODEL", default="gemini-3.5-flash-lite")
     )
 
     # Hugging Face
