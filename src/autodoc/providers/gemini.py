@@ -17,7 +17,11 @@ class GeminiProvider(BaseProvider):
 
     def __init__(self, api_key: str, model: str = "gemini-2.5-pro") -> None:
         try:
-            import google.generativeai as genai
+            import warnings
+
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=FutureWarning)
+                import google.generativeai as genai
         except ImportError as e:
             raise ProviderError(
                 "google-generativeai is not installed. Run: pip install google-generativeai"
@@ -60,5 +64,5 @@ class GeminiProvider(BaseProvider):
             model = self._genai.GenerativeModel(model_name=self._model_name)
             model.generate_content("ping")
             return True
-        except (OSError, ValueError, RuntimeError):
+        except Exception:  # noqa: BLE001
             return False
