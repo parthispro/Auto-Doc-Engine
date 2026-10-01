@@ -127,7 +127,7 @@ autodoc run \
 
 ```bash
 # 1. Clone
-git clone https://github.com/youruser/auto-doc-engine
+git clone https://github.com/parthispro/auto-doc-engine
 cd auto-doc-engine
 
 # 2. Create virtual environment
@@ -151,7 +151,7 @@ autodoc health
 ### PDF support (optional)
 
 ```bash
-# Ubuntu / Debian / Kali
+# Ubuntu / Debian / Kali / linux
 sudo apt install pandoc texlive-xetex
 
 # macOS
