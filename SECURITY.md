@@ -26,3 +26,4 @@ for confirmed critical issues.
 | Sanitizer bypasses (IP/hash leaks) | Issues with third-party AI provider APIs |
 | API key exposure in output files | Rate limiting by external providers |
 | Path traversal in output directory | Model hallucinations in generated content |
+

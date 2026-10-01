@@ -23,3 +23,4 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 - Demo telemetry file for end-to-end testing
 - `.env.example` configuration template
 - `~/.autodoc/config.toml` support for user-level persistent config
+

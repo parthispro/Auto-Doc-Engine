@@ -110,3 +110,4 @@ class GeminiProvider(BaseProvider):
             return True
         except Exception:  # noqa: BLE001
             return False
+

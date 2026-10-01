@@ -445,3 +445,4 @@ See [CHANGELOG.md](CHANGELOG.md).
 ## License
 
 [MIT](LICENSE) © 2026 Auto-Doc Engine Contributors
+

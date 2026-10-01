@@ -93,3 +93,4 @@ class Config:
 
 # Singleton
 config = Config()
+

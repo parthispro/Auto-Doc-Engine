@@ -66,3 +66,4 @@ class TestSegmentByTool:
         raw = "some random output line"
         segs = segment_by_tool(raw)
         assert "_other" in segs
+
