@@ -29,6 +29,7 @@
 - [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [How to Run (CTF Workflow)](#how-to-run-ctf-workflow)
 - [Usage](#usage)
 - [AI Providers](#ai-providers)
 - [Project Structure](#project-structure)
@@ -168,7 +169,7 @@ All settings resolve in this priority order:
 |---|---|---|
 | `AUTODOC_PROVIDER` | `auto` | Active provider: `gemini` · `huggingface` · `ollama` · `auto` |
 | `GEMINI_API_KEY` | — | [Google AI Studio](https://aistudio.google.com/app/apikey) key |
-| `GEMINI_MODEL` | `gemini-2.5-pro` | Gemini model name |
+| `GEMINI_MODEL` | `gemini-3.5-flash-lite` | Gemini model name |
 | `HF_API_KEY` | — | [Hugging Face](https://huggingface.co/settings/tokens) User Access Token |
 | `HF_MODEL` | `mistralai/Mistral-7B-Instruct-v0.3` | HF model ID |
 | `HF_ENDPOINT` | — | Custom HF Dedicated Endpoint URL (overrides serverless) |
@@ -178,6 +179,71 @@ All settings resolve in this priority order:
 | `AUTODOC_SANITIZE` | `true` | Enable/disable IP + hash redaction |
 
 > **Never commit `.env`** — it's in `.gitignore` by default.
+
+---
+
+## How to Run (CTF Workflow)
+
+Auto-Doc Engine is built to capture your raw terminal telemetry during an engagement and synthesize it into a clinical writeup once complete.
+
+### Step 1: Start Recording (Before You Begin)
+
+Open your terminal and initialize background logging using Linux's built-in `script` utility:
+
+```bash
+script -q ctf_session.log
+```
+
+> Everything typed and printed in this shell (nmap, curl, gobuster, python scripts, gdb sessions, payloads) will be saved to `ctf_session.log` in real time with zero performance impact.
+
+### Step 2: Solve the Challenge Normally
+
+Work through your reconnaissance, exploitation attempts, and pivots as usual:
+
+```bash
+# 1. Reconnaissance
+nmap -sC -sV 10.10.11.50
+
+# 2. Directory enumeration
+gobuster dir -u http://10.10.11.50 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+
+# 3. Exploitation & Pivoting
+curl -X POST http://10.10.11.50/login -d "user=admin' OR 1=1--"
+# Note: Failed attempts are valuable — Auto-Doc detects them as [PIVOT] markers!
+
+# 4. Final Flag Retrieval
+# Working exploit retrieves the flag.
+```
+
+When you capture the flag, exit the recording session:
+
+```bash
+exit
+# or press Ctrl + D
+```
+
+### Step 3: Synthesize the Writeup
+
+Activate the environment and generate your portfolio writeup:
+
+```bash
+source .venv/bin/activate
+
+autodoc run \
+  -f ctf_session.log \
+  --name "HackTheBox — Challenge Title" \
+  --domain web \
+  --difficulty medium \
+  --preview
+```
+
+### What Happens Automatically
+
+1. **Noise Filtration**: Strips raw ANSI escape color codes, backspace sequences, ping loops, and tool boilerplate banners.
+2. **Pivot Detection**: Automatically extracts failed attempts (`403 Forbidden`, `Connection refused`, syntax errors) and marks them as `[PIVOT]` milestones demonstrating analytical rigor.
+3. **Clinical Sanitization**: Replaces target IP addresses, hashes, and sensitive hostnames with clinical redaction markers (`[REDACTED_PRIVATE_IP]`, `[REDACTED_HOST]`).
+4. **AI Synthesis**: Passes cleaned telemetry to Gemini (or fallback providers) following the strict 5-section schema.
+5. **Multi-Format Export**: Generates `.md`, styled dark-mode `.html`, and `.pdf` inside `./reports/`.
 
 ---
 
