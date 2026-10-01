@@ -254,7 +254,7 @@ def run(
     console.print("\n[bold green]✓ Writeup synthesized successfully[/bold green]")
     console.print(table)
     console.print(
-        f"  [dim]Identifiers sanitized:[/dim] [yellow]{result.replacements_count}[/dim]  "
+        f"  [dim]Identifiers sanitized:[/dim] [yellow]{result.replacements_count}[/yellow]  "
         f"[dim]Provider:[/dim] [green]{result.provider_used}[/green]"
     )
 
