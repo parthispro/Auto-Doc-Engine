@@ -45,4 +45,3 @@ class BaseProvider(ABC):
 
 class ProviderError(RuntimeError):
     """Raised when a provider fails to generate output."""
-

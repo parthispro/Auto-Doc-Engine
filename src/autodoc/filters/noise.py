@@ -173,4 +173,3 @@ def segment_by_tool(raw: str) -> dict[str, list[str]]:
         segments.setdefault(current_tool, []).append("\n".join(current_block))
 
     return segments
-

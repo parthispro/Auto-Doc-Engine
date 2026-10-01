@@ -116,4 +116,3 @@ def sanitize(raw: str, redact_flags: bool = False) -> SanitizationResult:
         result.text = _FLAG.sub(_replace_flag, result.text)
 
     return result
-

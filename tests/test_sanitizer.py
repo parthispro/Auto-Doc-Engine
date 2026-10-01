@@ -65,4 +65,3 @@ class TestFlagRedaction:
         result = sanitize("CTF{th1s_1s_th3_fl4g}", redact_flags=True)
         assert "th1s_1s_th3_fl4g" not in result.text
         assert "[REDACTED_FLAG]" in result.text
-

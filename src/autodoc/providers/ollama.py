@@ -87,4 +87,3 @@ class OllamaProvider(BaseProvider):
         ):
             return []
         return []
-

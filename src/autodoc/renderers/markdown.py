@@ -229,4 +229,3 @@ def render(
             written["pdf_skipped"] = Path("pandoc_not_installed")
 
     return written
-

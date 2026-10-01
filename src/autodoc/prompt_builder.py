@@ -92,4 +92,3 @@ def build_prompt(
         telemetry=telemetry,
     )
     return SYSTEM_PROMPT, user_prompt
-
