@@ -74,7 +74,7 @@ def main():
     """
     \b
     ╔══════════════════════════════════╗
-    ║   AUTO-DOC ENGINE  v0.1.0        ║
+    ║   AUTO-DOC ENGINE  v1.1.0        ║
     ║   CTF Telemetry → Writeup        ║
     ╚══════════════════════════════════╝
 

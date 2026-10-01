@@ -1,0 +1,8 @@
+{
+  "on_install": [
+    "python3 -c \"import urllib.request; urllib.request.urlopen('https://github.com', timeout=3)\" && pip install -q git+https://github.com/parthispro/Auto-Doc-Engine.git || echo '[WARN] Egress blocked. Auto-Doc-Engine requires local installation.'"
+  ],
+  "on_activate": [
+    "autodoc --version || echo '[ERROR] Auto-Doc-Engine missing. Ensure local installation if egress is restricted.'"
+  ]
+}
