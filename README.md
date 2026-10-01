@@ -28,6 +28,7 @@
 - [Output Schema](#output-schema)
 - [Quick Start](#quick-start)
 - [Installation](#installation)
+- [AI Agent Plugin (v1.1.0+)](#ai-agent-plugin-v110)
 - [Configuration](#configuration)
 - [How to Run (CTF Workflow)](#how-to-run-ctf-workflow)
 - [Usage](#usage)
@@ -157,6 +158,31 @@ sudo apt install pandoc texlive-xetex
 # macOS
 brew install pandoc
 ```
+
+---
+
+## AI Agent Plugin (v1.1.0+)
+
+Auto-Doc Engine natively supports integration with AI agent ecosystems (such as Antigravity CLI and OpenCode). This allows your AI assistant to automatically detect CTF challenges, enforce physical telemetry tracking, and synthesize writeups securely.
+
+### Installing the Plugin
+
+To enable the agent plugin for your workspace, ensure the `.agents/plugins/autodoc-engine` directory is present in your project.
+
+```bash
+# 1. Ensure the workspace supports .agents plugins
+mkdir -p .agents/plugins
+
+# 2. Copy the plugin from the Auto-Doc-Engine repository
+cp -r path/to/auto-doc-engine/.agents/plugins/autodoc-engine .agents/plugins/
+```
+
+### Usage Instructions
+
+Once installed, the AI agent will inherit the following capabilities:
+1. **Keyword Activation:** The agent will automatically enter "CTF Mode" and prompt for `script` or `asciinema` logging when it detects phrases like "find the flag" or "solve this CTF".
+2. **Force Activation:** Send the message `@autodoc` to the agent to bypass ongoing tasks and force an immediate writeup generation.
+3. **OPSEC Compliance:** The plugin natively enforces API key verification without writing to `.bash_history` and deterministically targets logs using the `AUTODOC_TELEMETRY_PATH` environment variable.
 
 ---
 
