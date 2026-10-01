@@ -27,6 +27,7 @@ class GeminiProvider(BaseProvider):
                 "google-generativeai is not installed. Run: pip install google-generativeai"
             ) from e
 
+        api_key = api_key.strip()
         genai.configure(api_key=api_key)
         self._genai = genai
         self._model_name = model
