@@ -101,7 +101,7 @@ Every synthesized writeup enforces exactly five clinical sections:
 ## Quick Start
 
 ```bash
-git clone https://github.com/youruser/auto-doc-engine
+git clone https://github.com/parthispro/Auto-Doc-Engine
 cd auto-doc-engine
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e .
